@@ -10,7 +10,7 @@
   (let [m (.lastModified (new java.io.File filepath))]
     (tc/from-long m)))
 
-(defn modified-ago [datetime-tstp]
+(defn fmt-modified-ago [datetime-tstp long]
   (let [period (-> (t/interval datetime-tstp (t/now))
                    .toPeriod)
         formatter
@@ -26,16 +26,21 @@
             .appendHours
             (.appendSuffix " hour, " " hours, ")
             .appendMinutes
-            (.appendSuffix " minute, " " minutes, ")
+            (.appendSuffix (if long " minute, " " min, ") (if long " minutes, " " mins, "))
             .appendSeconds
-            (.appendSuffix " second" " seconds")
+            (.appendSuffix (if long " second" " sec") (if long " seconds" " secs"))
             .printZeroNever
             .toFormatter)]
     (str (.print formatter period) " ago")))
 
-(defn file-modified-ago [filepath]
-  (modified-ago (modified filepath)))
+(defn modified-ago
+  ([datetime-tstp]      (fmt-modified-ago datetime-tstp false))
+  ([datetime-tstp long] (fmt-modified-ago datetime-tstp long)))
+
+(defn file-modified-ago
+  ([filepath]      (fmt-modified-ago (modified filepath) false))
+  ([filepath long] (fmt-modified-ago (modified filepath) long)))
   
-(defn tstp-modified-ago [tstp]
-  (modified-ago (new DateTime tstp)))
-  
+(defn tstp-modified-ago
+  ([tstp]      (fmt-modified-ago (new DateTime tstp) false))
+  ([tstp long] (fmt-modified-ago (new DateTime tstp) long)))
