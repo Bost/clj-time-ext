@@ -8,9 +8,9 @@ Download from http://example.com/FIXME.
 
 ## Usage
 
-FIXME: explanation
-
-    $ java -jar clj-time-ext-0.1.0-standalone.jar [args]
+```bash
+java -jar clj-time-ext-0.2.0-standalone.jar [args]
+```
 
 ## Options
 
