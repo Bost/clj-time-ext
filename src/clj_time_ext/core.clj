@@ -10,6 +10,7 @@
   (let [m (.lastModified (new java.io.File filepath))]
     (tc/from-long m)))
 
+;; TODO calls of .printZeroNever .toFormatter are redundant
 (defn modified-diff
   "Typical usage: (modified-diff datetime-tstp (t/now) :verbose true)"
   [datetime-tstp datetime-tstp-now & {:keys [verbose] :or {verbose false}}]
