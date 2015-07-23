@@ -46,7 +46,7 @@
               .appendHours
               (.appendSuffix " hour, " " hours, ")
               .appendMinutes
-              (.appendSuffix " min, " " mins, ")
+              (.appendSuffix " min" " mins")
               .printZeroNever
               .toFormatter))
         ]
@@ -55,9 +55,9 @@
 (defn file-modified-ago
   "Usage: (file-modified-ago filepath :verbose true)"
   [filepath & {:keys [verbose] :or {verbose false}}]
-  (modified-ago (modified filepath) verbose))
+  (modified-ago (modified filepath) :verbose verbose))
 
 (defn tstp-modified-ago
   "Usage: (tstp-modified-ago tstp :verbose true)"
   [tstp & {:keys [verbose] :or {verbose false}}]
-  (modified-ago (new DateTime tstp) verbose))
+  (modified-ago (new DateTime tstp) :verbose verbose))
