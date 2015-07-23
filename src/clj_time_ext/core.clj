@@ -36,15 +36,15 @@
               .toFormatter)
           (-> (new PeriodFormatterBuilder)
               .appendYears
-              (.appendSuffix " year, " " years, ")
+              (.appendSuffix " year " " years ")
               .appendMonths
-              (.appendSuffix " month, " " months, ")
+              (.appendSuffix " month " " months ")
               .appendWeeks
-              (.appendSuffix " week, " " weeks, ")
+              (.appendSuffix " week " " weeks ")
               .appendDays
-              (.appendSuffix " day, " " days, ")
+              (.appendSuffix " day " " days ")
               .appendHours
-              (.appendSuffix " hour, " " hours, ")
+              (.appendSuffix " hour " " hours ")
               .appendMinutes
               (.appendSuffix " min" " mins")
               .printZeroNever
