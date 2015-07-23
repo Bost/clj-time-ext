@@ -10,11 +10,13 @@
   (let [m (.lastModified (new java.io.File filepath))]
     (tc/from-long m)))
 
-(defn fmt-modified-ago [datetime-tstp long]
+(defn modified-ago
+  "Usage: (modified-ago datetime-tstp :verbose true)"
+  [datetime-tstp & {:keys [verbose] :or {verbose false}}]
   (let [period (-> (t/interval datetime-tstp (t/now))
                    .toPeriod)
         formatter
-        (if long
+        (if verbose
           (-> (new PeriodFormatterBuilder)
               .appendYears
               (.appendSuffix " year, " " years, ")
@@ -48,16 +50,14 @@
               .printZeroNever
               .toFormatter))
         ]
-    (str (.print formatter period) (if long " ago" ""))))
-
-(defn modified-ago
-  ([datetime-tstp]      (fmt-modified-ago datetime-tstp false))
-  ([datetime-tstp long] (fmt-modified-ago datetime-tstp long)))
+    (str (.print formatter period) (if verbose " ago" ""))))
 
 (defn file-modified-ago
-  ([filepath]      (fmt-modified-ago (modified filepath) false))
-  ([filepath long] (fmt-modified-ago (modified filepath) long)))
+  "Usage: (file-modified-ago filepath :verbose true)"
+  [filepath & {:keys [verbose] :or {verbose false}}]
+  (modified-ago (modified filepath) verbose))
 
 (defn tstp-modified-ago
-  ([tstp]      (fmt-modified-ago (new DateTime tstp) false))
-  ([tstp long] (fmt-modified-ago (new DateTime tstp) long)))
+  "Usage: (tstp-modified-ago tstp :verbose true)"
+  [tstp & {:keys [verbose] :or {verbose false}}]
+  (modified-ago (new DateTime tstp) verbose))
