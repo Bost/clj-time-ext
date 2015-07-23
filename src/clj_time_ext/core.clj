@@ -14,24 +14,41 @@
   (let [period (-> (t/interval datetime-tstp (t/now))
                    .toPeriod)
         formatter
-        (-> (new PeriodFormatterBuilder)
-            .appendYears
-            (.appendSuffix " year, " " years, ")
-            .appendMonths
-            (.appendSuffix " month, " " months, ")
-            .appendWeeks
-            (.appendSuffix " week, " " weeks, ")
-            .appendDays
-            (.appendSuffix " day, " " days, ")
-            .appendHours
-            (.appendSuffix " hour, " " hours, ")
-            .appendMinutes
-            (.appendSuffix (if long " minute, " " min, ") (if long " minutes, " " mins, "))
-            .appendSeconds
-            (.appendSuffix (if long " second" " sec") (if long " seconds" " secs"))
-            .printZeroNever
-            .toFormatter)]
-    (str (.print formatter period) " ago")))
+        (if long
+          (-> (new PeriodFormatterBuilder)
+              .appendYears
+              (.appendSuffix " year, " " years, ")
+              .appendMonths
+              (.appendSuffix " month, " " months, ")
+              .appendWeeks
+              (.appendSuffix " week, " " weeks, ")
+              .appendDays
+              (.appendSuffix " day, " " days, ")
+              .appendHours
+              (.appendSuffix " hour, " " hours, ")
+              .appendMinutes
+              (.appendSuffix " minute, " " minutes, ")
+              .appendSeconds
+              (.appendSuffix " second" " seconds")
+              .printZeroNever
+              .toFormatter)
+          (-> (new PeriodFormatterBuilder)
+              .appendYears
+              (.appendSuffix " year, " " years, ")
+              .appendMonths
+              (.appendSuffix " month, " " months, ")
+              .appendWeeks
+              (.appendSuffix " week, " " weeks, ")
+              .appendDays
+              (.appendSuffix " day, " " days, ")
+              .appendHours
+              (.appendSuffix " hour, " " hours, ")
+              .appendMinutes
+              (.appendSuffix " min, " " mins, ")
+              .printZeroNever
+              .toFormatter))
+        ]
+    (str (.print formatter period) (if long " ago" ""))))
 
 (defn modified-ago
   ([datetime-tstp]      (fmt-modified-ago datetime-tstp false))
@@ -40,7 +57,7 @@
 (defn file-modified-ago
   ([filepath]      (fmt-modified-ago (modified filepath) false))
   ([filepath long] (fmt-modified-ago (modified filepath) long)))
-  
+
 (defn tstp-modified-ago
   ([tstp]      (fmt-modified-ago (new DateTime tstp) false))
   ([tstp long] (fmt-modified-ago (new DateTime tstp) long)))
