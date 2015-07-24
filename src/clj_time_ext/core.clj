@@ -10,14 +10,13 @@
   (let [m (.lastModified (new java.io.File filepath))]
     (tc/from-long m)))
 
-;; TODO calls of .printZeroNever .toFormatter are redundant
 (defn modified-diff
   "Typical usage: (modified-diff datetime-tstp (t/now) :verbose true)"
   [datetime-tstp datetime-tstp-now & {:keys [verbose] :or {verbose false}}]
   (let [period (-> (t/interval datetime-tstp
                                datetime-tstp-now)
                    .toPeriod)
-        formatter
+        builder
         (if verbose
           (-> (new PeriodFormatterBuilder)
               .appendYears
@@ -34,8 +33,7 @@
               (.appendSuffix " minute " " minutes ")
               .appendSeconds
               (.appendSuffix " second " " seconds ")
-              .printZeroNever
-              .toFormatter)
+              )
           (if (> (.getHours period) 0 )
             (-> (new PeriodFormatterBuilder)
                 .appendYears
@@ -48,8 +46,7 @@
                 (.appendSuffix " day " " days ")
                 .appendHours
                 (.appendSuffix " hour " " hours ")
-                .printZeroNever
-                .toFormatter)
+                )
             (-> (new PeriodFormatterBuilder)
                 .appendYears
                 (.appendSuffix " year " " years ")
@@ -63,8 +60,10 @@
                 (.appendSuffix " hour " " hours ")
                 .appendMinutes
                 (.appendSuffix " min " " mins ")
+                )))
+        formatter (-> builder
                 .printZeroNever
-                .toFormatter)))
+                .toFormatter)
         ]
     (str (clojure.string/trimr (.print formatter period))
          (if verbose " ago" ""))))
