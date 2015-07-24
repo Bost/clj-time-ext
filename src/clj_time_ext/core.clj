@@ -16,9 +16,10 @@
   (let [period (-> (t/interval datetime-tstp
                                datetime-tstp-now)
                    .toPeriod)
+        prd-frmt-builder (new PeriodFormatterBuilder)
         builder
         (if verbose
-          (-> (new PeriodFormatterBuilder)
+          (-> prd-frmt-builder
               .appendYears
               (.appendSuffix " year " " years ")
               .appendMonths
@@ -32,39 +33,69 @@
               .appendMinutes
               (.appendSuffix " minute " " minutes ")
               .appendSeconds
-              (.appendSuffix " second " " seconds ")
-              )
-          (if (> (.getHours period) 0 )
-            (-> (new PeriodFormatterBuilder)
+              (.appendSuffix " second " " seconds "))
+          (if (> (.getMonths period) 0)
+            (-> prd-frmt-builder
                 .appendYears
                 (.appendSuffix " year " " years ")
                 .appendMonths
                 (.appendSuffix " month " " months ")
                 .appendWeeks
-                (.appendSuffix " week " " weeks ")
-                .appendDays
-                (.appendSuffix " day " " days ")
-                .appendHours
-                (.appendSuffix " hour " " hours ")
-                )
-            (-> (new PeriodFormatterBuilder)
-                .appendYears
-                (.appendSuffix " year " " years ")
-                .appendMonths
-                (.appendSuffix " month " " months ")
-                .appendWeeks
-                (.appendSuffix " week " " weeks ")
-                .appendDays
-                (.appendSuffix " day " " days ")
-                .appendHours
-                (.appendSuffix " hour " " hours ")
-                .appendMinutes
-                (.appendSuffix " min " " mins ")
-                )))
+                (.appendSuffix " week " " weeks "))
+            (if (> (.getWeeks period) 0)
+              (-> prd-frmt-builder
+                  .appendYears
+                  (.appendSuffix " year " " years ")
+                  .appendMonths
+                  (.appendSuffix " month " " months ")
+                  .appendWeeks
+                  (.appendSuffix " week " " weeks ")
+                  .appendDays
+                  (.appendSuffix " day " " days "))
+              (if (> (.getDays period) 0)
+                (-> prd-frmt-builder
+                    .appendYears
+                    (.appendSuffix " year " " years ")
+                    .appendMonths
+                    (.appendSuffix " month " " months ")
+                    .appendWeeks
+                    (.appendSuffix " week " " weeks ")
+                    .appendDays
+                    (.appendSuffix " day " " days ")
+                    .appendHours
+                    (.appendSuffix " hour " " hours "))
+                (if (> (.getHours period) 0)
+                  (-> prd-frmt-builder
+                      .appendYears
+                      (.appendSuffix " year " " years ")
+                      .appendMonths
+                      (.appendSuffix " month " " months ")
+                      .appendWeeks
+                      (.appendSuffix " week " " weeks ")
+                      .appendDays
+                      (.appendSuffix " day " " days ")
+                      .appendHours
+                      (.appendSuffix " hour " " hours ")
+                      .appendMinutes
+                      (.appendSuffix " min " " mins "))
+                  (-> prd-frmt-builder
+                      .appendYears
+                      (.appendSuffix " year " " years ")
+                      .appendMonths
+                      (.appendSuffix " month " " months ")
+                      .appendWeeks
+                      (.appendSuffix " week " " weeks ")
+                      .appendDays
+                      (.appendSuffix " day " " days ")
+                      .appendHours
+                      (.appendSuffix " hour " " hours ")
+                      .appendMinutes
+                      (.appendSuffix " min " " mins ")
+                      .appendSeconds
+                      (.appendSuffix " sec " " secs ")))))))
         formatter (-> builder
                 .printZeroNever
-                .toFormatter)
-        ]
+                .toFormatter)]
     (str (clojure.string/trimr (.print formatter period))
          (if verbose " ago" ""))))
 

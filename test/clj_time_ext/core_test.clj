@@ -3,13 +3,20 @@
             [clj-time-ext.core :refer :all])
   (:import org.apache.commons.io.FilenameUtils
           org.joda.time.format.PeriodFormatterBuilder
-          org.joda.time.DateTime)
-  )
+          org.joda.time.DateTime))
 
 (deftest basic
   (testing "basic - FIXME, I fail."
-    (is (.equals "2 days"
-                 (modified-diff
-                  (new DateTime #inst "2015-07-20T14:26:34.634599000-00:00")
-                  (new DateTime #inst "2015-07-22T14:26:35.634599000-00:00")
-                  :verbose false)))))
+    (is (.equals
+         "2 days 1 second ago"
+         (modified-diff
+          (new DateTime #inst "2015-07-20T14:26:34.634599000-00:00")
+          (new DateTime #inst "2015-07-22T14:26:35.634599000-00:00")
+          :verbose true)))
+    (is (.equals
+         "2 days"
+         (modified-diff
+          (new DateTime #inst "2015-07-20T14:26:34.634599000-00:00")
+          (new DateTime #inst "2015-07-22T14:26:35.634599000-00:00")
+          :verbose false)))
+    ))
