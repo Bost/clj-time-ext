@@ -8,8 +8,18 @@ Download from http://example.com/FIXME.
 
 ## Usage
 
+Build:
 ```bash
-java -jar clj-time-ext-0.2.0-standalone.jar [args]
+lein uberjar && lein install
+```
+
+```fish
+lein uberjar; and lein install
+```
+
+
+```bash
+java -jar clj-time-ext-0.5.0-standalone.jar [args]
 ```
 
 ## Options

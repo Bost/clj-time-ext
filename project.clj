@@ -1,4 +1,4 @@
-(defproject clj-time-ext "0.4.5"
+(defproject clj-time-ext "0.5.0"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -7,7 +7,7 @@
                  ;; [org.clojure/clojure "1.7.0"] ; causes problems
                  [org.clojure/clojure "1.6.0"]
                  [commons-io/commons-io "2.4"]
-                 [clj-time "0.10.0"]
+                 [clj-time "0.11.0"]
                  ]
   :main clj-time-ext.core
   :profiles {:uberjar {:aot :all}})
