@@ -19,7 +19,7 @@ lein uberjar; and lein install
 
 
 ```bash
-java -jar clj-time-ext-0.5.0-standalone.jar [args]
+java -jar clj-time-ext-0.6.0-standalone.jar [args]
 ```
 
 ## Options
