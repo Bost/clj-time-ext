@@ -1,10 +1,10 @@
-(defproject clj-time-ext "0.13.0"
+(defproject clj-time-ext "0.14.0"
   :description "Extention of clj-time"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.9.0-alpha17"]
-                 [commons-io/commons-io "2.5"]
-                 [clj-time "0.14.0"]]
+  :dependencies [[org.clojure/clojure "1.9.0-RC2"]
+                 [commons-io/commons-io "2.6"]
+                 [clj-time "0.14.2"]]
   :main clj-time-ext.core
   :profiles {:uberjar {:aot :all}})

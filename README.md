@@ -1,7 +1,8 @@
+TODO have a look at https://github.com/juxt/tick
 ```bash
 lein install
 ```
 or:
 ```bash
-java -jar clj-time-ext-0.7.2-standalone.jar [args]
+java -jar clj-time-ext-<version>-standalone.jar [args]
 ```
