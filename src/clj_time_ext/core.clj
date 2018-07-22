@@ -1,8 +1,7 @@
 (ns clj-time-ext.core
   (:require [clj-time.core :as t]
             [clj-time.coerce :as tc])
-  (:import org.apache.commons.io.FilenameUtils
-           org.joda.time.format.PeriodFormatterBuilder
+  (:import org.joda.time.format.PeriodFormatterBuilder
            org.joda.time.DateTime)
   (:gen-class))
 
@@ -29,7 +28,9 @@
       .appendMonths (sfx :month desc-length)
       .appendWeeks  (sfx :week  desc-length)))
 
-(defn call-cc [fmt test-val cont-fn] (if (pos? (test-val)) fmt (cont-fn fmt)))
+(defn cps
+  "Continuation Passing Style"
+  [fmt test-val cont-fn] (if (pos? (test-val)) fmt (cont-fn fmt)))
 
 (defn builder
   "TODO try to use continuation monad m-cont"
@@ -42,29 +43,29 @@
           .appendMinutes (sfx :minute desc-length)
           .appendSeconds (sfx :second desc-length)
           .appendMillis  (sfx :msec desc-length))
-      (call-cc
+      (cps
        ymw
        #(.getWeeks period)
        (fn [fmt]
-         (call-cc (-> fmt .appendDays (sfx :day desc-length))
-                  #(.getDays period)
-                  (fn [fmt]
-                    (call-cc
-                     (-> fmt .appendHours (sfx :hour desc-length))
-                     #(.getHours period)
-                     (fn [fmt]
-                       (call-cc
-                        (-> fmt .appendMinutes (sfx :minute desc-length))
-                        #(.getMinutes period)
-                        (fn [fmt]
-                          (call-cc
-                           (-> fmt .appendSeconds (sfx :second desc-length))
-                           #(.getMilis period)
-                           (fn [fmt]
-                             (call-cc
-                              (-> fmt .appendSeconds (sfx :msec desc-length))
-                              #(.getMillis period)
-                              (fn [fmt] fmt)))))))))))))))
+         (cps (-> fmt .appendDays (sfx :day desc-length))
+              #(.getDays period)
+              (fn [fmt]
+                (cps
+                 (-> fmt .appendHours (sfx :hour desc-length))
+                 #(.getHours period)
+                 (fn [fmt]
+                   (cps
+                    (-> fmt .appendMinutes (sfx :minute desc-length))
+                    #(.getMinutes period)
+                    (fn [fmt]
+                      (cps
+                       (-> fmt .appendSeconds (sfx :second desc-length))
+                       #(.getSeconds period)
+                       (fn [fmt]
+                         (cps
+                          (-> fmt .appendMillis (sfx :msec desc-length))
+                          #(.getMillis period)
+                          (fn [fmt] fmt)))))))))))))))
 
 (defn intervall-diff
   "e.g. (intervall-diff (new DateTime #inst
@@ -84,15 +85,8 @@
   (str (intervall-diff dt-a (t/now) prm-map)
        (if verbose " ago" "")))
 
-(defn file-ago-diff
-  "e.g. (file-ago-diff filepath {:verbose true :desc-length :short})"
-  [filepath {:keys [verbose desc-length]
-             :or {verbose false desc-length :long} :as prm-map}]
-  (ago-diff (tc/from-long (.lastModified (new java.io.File filepath)))
-                prm-map))
-
 (defn tstp-ago-diff
-  "e.g. (tstp-ago-diff tstp { :verbose true :desc-length :short})"
+  "e.g. (tstp-ago-diff tstp {:verbose true :desc-length :short})"
   [tstp {:keys [verbose desc-length]
          :or {verbose false desc-length :long} :as prm-map}]
   (ago-diff (new DateTime tstp) prm-map))
