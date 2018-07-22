@@ -1,4 +1,4 @@
-(defproject clj-time-ext "0.15.1"
+(defproject clj-time-ext "0.16.0"
   :description "Extention of clj-time"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
