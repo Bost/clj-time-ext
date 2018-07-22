@@ -2,8 +2,8 @@
   (:require [clj-time.core :as t]
             [clj-time.coerce :as tc])
   (:import org.apache.commons.io.FilenameUtils
-          org.joda.time.format.PeriodFormatterBuilder
-          org.joda.time.DateTime)
+           org.joda.time.format.PeriodFormatterBuilder
+           org.joda.time.DateTime)
   (:gen-class))
 
 (def time-unit-desc
@@ -32,6 +32,7 @@
 (defn call-cc [fmt test-val cont-fn] (if (pos? (test-val)) fmt (cont-fn fmt)))
 
 (defn builder
+  "TODO try to use continuation monad m-cont"
   [period {:keys [verbose desc-length] :or {verbose false desc-length :long}}]
   (let [ymw (ymw-formatter desc-length)]
     (if verbose
@@ -65,38 +66,33 @@
                               #(.getMillis period)
                               (fn [fmt] fmt)))))))))))))))
 
-(defn modified-diff
-  "Example:
-  (let [datetime-tstp (new DateTime #inst
-                         \"2015-07-20T14:26:34.634599000-00:00\")]
-  (modified-diff datetime-tstp (t/now) {:verbose true}))"
-
-  [datetime-tstp datetime-tstp-now
-   {:keys [verbose desc-length] :or {verbose false desc-length :long} :as prm}]
-  (let [period (.toPeriod (t/interval datetime-tstp datetime-tstp-now))
+(defn intervall-diff
+  "e.g. (intervall-diff (new DateTime #inst
+                         \"2015-07-20T14:26:34.634599000-00:00\") (t/now)})"
+  [dt-a dt-b prm]
+  (let [period (.toPeriod (t/interval dt-a dt-b))
         formatter (-> period
                       (builder prm)
                       .printZeroNever
                       .toFormatter)]
-    (str (clojure.string/trimr (.print formatter period))
-         (if verbose " ago" ""))))
+    (clojure.string/trimr (.print formatter period))))
 
-(defn modified-ago
-  "Usage: (modified-ago datetime-tstp {:verbose true :desc-length :short})"
-  [datetime-tstp {:keys [verbose desc-length]
-                  :or {verbose false desc-length :long} :as prm-map}]
-  (modified-diff datetime-tstp (t/now) prm-map))
+(defn ago-diff
+  "e.g. (ago-diff dt-a {:verbose true :desc-length :short})"
+  [dt-a {:keys [verbose desc-length]
+         :or {verbose false desc-length :long} :as prm-map}]
+  (str (intervall-diff dt-a (t/now) prm-map)
+       (if verbose " ago" "")))
 
-
-(defn file-modified-ago
-  "Usage: (file-modified-ago filepath {:verbose true :desc-length :short})"
+(defn file-ago-diff
+  "e.g. (file-ago-diff filepath {:verbose true :desc-length :short})"
   [filepath {:keys [verbose desc-length]
              :or {verbose false desc-length :long} :as prm-map}]
-  (modified-ago (tc/from-long (.lastModified (new java.io.File filepath)))
+  (ago-diff (tc/from-long (.lastModified (new java.io.File filepath)))
                 prm-map))
 
-(defn tstp-modified-ago
-  "Usage: (tstp-modified-ago tstp { :verbose true :desc-length :short})"
+(defn tstp-ago-diff
+  "e.g. (tstp-ago-diff tstp { :verbose true :desc-length :short})"
   [tstp {:keys [verbose desc-length]
          :or {verbose false desc-length :long} :as prm-map}]
-  (modified-ago (new DateTime tstp) prm-map))
+  (ago-diff (new DateTime tstp) prm-map))
