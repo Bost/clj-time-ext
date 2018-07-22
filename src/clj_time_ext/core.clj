@@ -15,8 +15,6 @@
    :minute {:long [" minute " " minutes "] :short ["m" "m"]}
    :second {:long [" second " " seconds "] :short ["s" "s"]}})
 
-(defn has? [get-fn period]
-  (> (get-fn period) 0))
 (defn sfx [obj k desc-length]
   (let [time-unit (desc-length (k time-unit-desc))]
     (.appendSuffix obj
@@ -28,6 +26,12 @@
       .appendYears  (sfx :year  desc-length)
       .appendMonths (sfx :month desc-length)
       .appendWeeks  (sfx :week  desc-length)))
+
+(defn cbuilder
+  [datetime-tstp datetime-tstp-now
+   {:keys [verbose desc-length] :or {verbose false desc-length :long}}
+   cont-fn]
+  )
 
 (defn builder
   "TODO continuation"
@@ -41,22 +45,21 @@
           .appendMinutes (sfx :minute desc-length)
           .appendSeconds (sfx :second desc-length))
       (let [period (.toPeriod (t/interval datetime-tstp datetime-tstp-now))]
-        (if (has? .getMonths period)
+        (if (pos? (.getMonths period))
           ymw
-          (if (has? .getWeeks period)
-            (-> ymw
-                .appendDays (sfx :day desc-length))
-            (if (has? .getDays period)
+          (if (pos? (.getWeeks period))
+            (.appendDays ymw (sfx :day desc-length))
+            (if (pos? (.getDays period))
               (-> ymw
                   .appendDays  (sfx :day desc-length)
                   .appendHours (sfx :hour desc-length))
-              (if (has? .getHours period)
+              (if (pos? (.getHours period))
                 (-> ymw
                     .appendDays    (sfx :day desc-length)
                     .appendHours   (sfx :hour desc-length)
                     .appendMinutes (sfx :minute desc-length))
                 (identity
-                 ;; if (has? .getSeconds period)
+                 ;; if (pos? .getSeconds period)
                  (-> ymw
                      .appendDays    (sfx :day desc-length)
                      .appendHours   (sfx :hour desc-length)
@@ -71,7 +74,7 @@
 
   [datetime-tstp datetime-tstp-now
    {:keys [verbose desc-length] :or {verbose false desc-length :long} :as prm}]
-  (let [period (-> (t/interval datetime-tstp datetime-tstp-now) .toPeriod)
+  (let [period (.toPeriod (t/interval datetime-tstp datetime-tstp-now))
         formatter (-> (builder datetime-tstp datetime-tstp-now period)
                       .printZeroNever
                       .toFormatter)]
