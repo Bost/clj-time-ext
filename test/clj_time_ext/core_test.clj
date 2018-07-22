@@ -12,22 +12,22 @@
          (modified-diff
           (new DateTime #inst "2015-07-20T14:26:34.634599000-00:00")
           (new DateTime #inst "2015-07-22T14:26:35.634599000-00:00")
-          { :verbose true :desc-length :long})))
+          {:verbose true :desc-length :long})))
     (is (.equals
          "2d1s ago"
          (modified-diff
           (new DateTime #inst "2015-07-20T14:26:34.634599000-00:00")
           (new DateTime #inst "2015-07-22T14:26:35.634599000-00:00")
-          { :verbose true :desc-length :short })))
+          {:verbose true :desc-length :short})))
     (is (.equals
          "2 days"
          (modified-diff
           (new DateTime #inst "2015-07-20T14:26:34.634599000-00:00")
           (new DateTime #inst "2015-07-22T14:26:35.634599000-00:00")
-          { :verbose false :desc-length :long })))
+          {:verbose false :desc-length :long})))
     (is (.equals
          "2d"
          (modified-diff
           (new DateTime #inst "2015-07-20T14:26:34.634599000-00:00")
           (new DateTime #inst "2015-07-22T14:26:35.634599000-00:00")
-          { :verbose false :desc-length :short })))))
+          {:verbose false :desc-length :short})))))
