@@ -7,7 +7,8 @@ https://mvnrepository.com/artifact/org.ocpsoft.prettytime/prettytime"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.10.0"]
-                 [clj-time "0.15.1"]]
+                 [clj-time "0.15.1"]
+                 [com.darwinsys/hirondelle-date4j "1.5.1"]]
   ;; can't use the lein-v from ~/.lein/profiles.clj
   :plugins [[com.roomkey/lein-v "7.0.0"]]
   :main clj-time-ext.core

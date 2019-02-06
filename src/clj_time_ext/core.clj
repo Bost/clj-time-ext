@@ -5,7 +5,10 @@
    [clj-time.format :as tf])
   (:import
    org.joda.time.format.PeriodFormatterBuilder
-   org.joda.time.DateTime)
+   org.joda.time.DateTime
+   java.util.Locale
+   java.util.TimeZone
+   )
   (:gen-class))
 
 (def time-unit-desc
@@ -19,7 +22,9 @@
    :msec   {:long [" msecs "  " msec "   ] :short ["ms" "ms"]}
    })
 
-(defn sfx [fmt k desc-length]
+(defn sfx
+  ".appendSuffix fmt ..."
+  [fmt k desc-length]
   (let [time-unit (desc-length (k time-unit-desc))]
     (.appendSuffix fmt
                    (first  time-unit)
@@ -94,12 +99,21 @@
          :or {verbose false desc-length :long} :as prm-map}]
   (ago-diff (new DateTime tstp) prm-map))
 
+(defn tstp [pattern]
+  (let [
+        ;; pattern "HHmmss.nnnn"
+        fmt (java.time.format.DateTimeFormatter/ofPattern pattern)
+        date (java.time.LocalDateTime/now)]
+    (subs (.format date fmt) 0 (count pattern))))
+
+(defn tstp4
+  "timestamp 112147.1234"
+  [] (tstp "HHmmss.nnnn"))
+
 (defn tnow
-  "Minimalistic timestamps of the GMT TimeZone. E.g. 112147.812"
-  []
-  (tf/unparse (tf/formatter "HHmmss.SSS") (t/now)))
+  "timestamp 112147.123"
+  [] (tstp "HHmmss.nnn"))
 
 (defn fntime [v]
   (tf/unparse (tf/formatter "HH:mm dd.MM.yy")
               (t/date-time v)))
-
