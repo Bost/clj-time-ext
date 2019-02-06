@@ -1,8 +1,11 @@
 (ns clj-time-ext.core
-  (:require [clj-time.core :as t]
-            [clj-time.coerce :as tc])
-  (:import org.joda.time.format.PeriodFormatterBuilder
-           org.joda.time.DateTime)
+  (:require
+   [clj-time.core :as t]
+   [clj-time.coerce :as tc]
+   [clj-time.format :as tf])
+  (:import
+   org.joda.time.format.PeriodFormatterBuilder
+   org.joda.time.DateTime)
   (:gen-class))
 
 (def time-unit-desc
@@ -90,3 +93,13 @@
   [tstp {:keys [verbose desc-length]
          :or {verbose false desc-length :long} :as prm-map}]
   (ago-diff (new DateTime tstp) prm-map))
+
+(defn tnow
+  "Minimalistic timestamps of the GMT TimeZone. E.g. 112147.812"
+  []
+  (tf/unparse (tf/formatter "HHmmss.SSS") (t/now)))
+
+(defn fntime [v]
+  (tf/unparse (tf/formatter "HH:mm dd.MM.yy")
+              (t/date-time v)))
+
