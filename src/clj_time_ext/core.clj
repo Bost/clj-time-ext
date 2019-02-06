@@ -106,13 +106,15 @@
         date (java.time.LocalDateTime/now)]
     (subs (.format date fmt) 0 (count pattern))))
 
-(defn tstp4
-  "timestamp 112147.1234"
-  [] (tstp "HHmmss.nnnn"))
+(defn tstp3 "timestamp 112147.123"       [] (tstp "HHmmss.nnn"))
+(defn tstp4 "timestamp 112147.1234"      [] (tstp "HHmmss.nnnn"))
+(defn tstp5 "timestamp 112147.12345"     [] (tstp "HHmmss.nnnnn"))
+(defn tstp6 "timestamp 112147.123456"    [] (tstp "HHmmss.nnnnnn"))
+(defn tstp7 "timestamp 112147.1234567"   [] (tstp "HHmmss.nnnnnnn"))
+(defn tstp8 "timestamp 112147.12345678"  [] (tstp "HHmmss.nnnnnnnn"))
+(defn tstp9 "timestamp 112147.123456789" [] (tstp "HHmmss.nnnnnnnnn"))
 
-(defn tnow
-  "timestamp 112147.123"
-  [] (tstp "HHmmss.nnn"))
+(defn tnow "timestamp 112147.123"        [] (tstp3))
 
 (defn fntime [v]
   (tf/unparse (tf/formatter "HH:mm dd.MM.yy")
