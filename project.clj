@@ -1,4 +1,4 @@
-(defproject clj-time-ext :lein-v
+(defproject org.clojars.bost/clj-time-ext :lein-v
   :description
   "Consider using
 [org.ocpsoft.prettytime/prettytime \"...\"]
