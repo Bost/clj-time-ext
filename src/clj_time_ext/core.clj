@@ -99,7 +99,12 @@
          :or {verbose false desc-length :long} :as prm-map}]
   (ago-diff (new DateTime tstp) prm-map))
 
-(defn tstp [pattern]
+(defn tstp
+  "Return a string containing current timestamp, formatted using `pattern` and
+  shortened to the length of the `pattern`. E.g.:
+  (tstp \"HHmmss.nnn\")
+  ;; => 112147.123"
+  [pattern]
   (let [
         ;; pattern "HHmmss.nnnn"
         fmt (java.time.format.DateTimeFormatter/ofPattern pattern)
